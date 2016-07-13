@@ -4,7 +4,10 @@
 var express    = require('express');     // call express
 var app        = express();              // define our app using express
 var bodyParser = require('body-parser');
+var mongoose   = require('mongoose');
+var Bear       = require('./app/models/bear');
 
+mongoose.connect('mongodb://mode.node@novus.modulusmongo.net:27017/Iganiq80'); // connect to a databse provided by modulus
 // Configure app the use bodyParser()
 // (this will let us get the data from a POST)
 app.use(bodyParser.urlencoded({ extended: true }));
