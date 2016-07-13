@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var Bear       = require('./app/models/bear');
 
-mongoose.connect('mongodb://mode.node@novus.modulusmongo.net:27017/Iganiq80'); // connect to a databse provided by modulus
+mongoose.connect('mongodb://localhost/node_api'); // connect to a database
+
 // Configure app the use bodyParser()
 // (this will let us get the data from a POST)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,12 +20,35 @@ var port = process.env.PORT || 8080;      // set our PORT
 
 var router = express.Router();            // get an instance of the express router
 
+// middleware to use for all requests
+router.use(function(req, res, next) {
+  // do logging
+  console.log('Something is happening.');
+  next(); // make sure to go to the next routes and don't stop here
+});
 // test route to make sure everythin is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
   res.json({ message: 'hooray! welcome to our api!'});
 });
 
 // more routes for our API will happen here
+
+router.route('/bears')
+
+  // create a bear (accessed at POST http://localhost:8080/api/bears)
+  .post(function(req, res) {
+
+    var bear = new Bear();      // create a new instance of the Bear model
+    bear.name = req.body.name;  // set the bear's name (comes from the request)
+
+    // save the bear and check for errors
+    bear.save(function(err) {
+      if (err)
+        res.send(err);
+
+      res.json({ message: 'Bear created!' });
+    });
+  });
 
 // REGISTER OUR routes
 // (all of the routes will be prefixed with /api)
