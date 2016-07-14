@@ -70,7 +70,39 @@ router.route('/bears/:bear_id')
         res.send(err);
       res.json(bear);
     });
-  });
+
+  })
+
+  // update the bear with this id (accessed at PUT http://localhost:8080/bears/:bear_id)
+    .put(function(req, res) {
+      Bear.findById(req.params.bear_id, function(err, bear) {
+        if (err)
+          res.send(err);
+
+        bear.name = req.body.name;    // update the bear's info
+
+        // save the bear
+        bear.save(function(err) {
+          if (err)
+            res.send(err);
+
+          res.json({ message: 'Bear updated!'});
+        });
+      });
+
+    })
+
+  // delete the bear with this id
+  	.delete(function(req, res) {
+  		Bear.remove({
+  			_id: req.params.bear_id
+  		}, function(err, bear) {
+  			if (err)
+  				res.send(err);
+
+  			res.json({ message: 'Successfully deleted' });
+  		});
+  	});
 
 // REGISTER OUR routes
 // (all of the routes will be prefixed with /api)
